@@ -16,7 +16,7 @@
     <div class="main rpgui-content">
       <div class="container">
         <div class="f_row sm rpgui-container framed-golden-2">
-          <div class="hud f_col c10"><h1>HUD</h1></div>
+          <div id="hud" class="hud f_col c10 p_0 j_start"></div>
         </div>
         <div class="f_row md">
           <div id="phaser-example" class="display_area f_col c10 p_0"></div>
@@ -52,16 +52,19 @@
               <div class="f_col c2 rpgui-icon empty-slot">Belt</div>
             </div>
           </div>
-          <div class="log f_col c6"><h1>LOG</h1></div>
+          <div class="log f_col c6">
+            <h1>LOG</h1>
+          </div>
         </div>
       </div>
     </div>
     <script src="assets/js/phaser.min.js"></script>
     <script src="assets/js/rpgui.js"></script>
-    <script type="module" src="assets/js/equipment.js"></script>
+    <script type="module" src="assets/js/Equipment.js"></script>
+    <script type="module" src="assets/js/Hud.js"></script>
     <script type="module" src="assets/js/frames.js"></script>
-    <script type="module" src="assets/js/character.js"></script>
-    <script type="module" src="assets/js/assistant.js"></script>
+    <script type="module" src="assets/js/Character.js"></script>
+    <script type="module" src="assets/js/Assistant.js"></script>
     <script type="module" src="assets/js/script.js"></script>
   </body>
 </html>

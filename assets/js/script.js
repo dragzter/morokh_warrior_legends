@@ -1,28 +1,7 @@
 import { playerAnimations } from "./frames.js";
-import Assistant from "./assistant.js";
-import Character from "./character.js";
-
-// ================
-// GLOBAL SCOPE
-// ================
-
-// Frame COONSTANTS
-const PLAYER_SCALE = 3.5;
-const PLAYER_RUN = "player_run";
-const PLAYER_IDLE = "player_idle";
-const PLAYER_ATK_1 = "player_attack_1";
-const PLAYER_ATK_2 = "player_attack_2";
-const PLAYER_ATK_3 = "player_attack_3";
-const PLAYER_BLOCK = "player_block";
-const PLAYER_BLOCK_IDLE = "player_block_idle";
-const PLAYER = "player";
-
-// UI Elements
-const playerAttack1Btn = document.getElementById("attack1");
-const playerAttack2Btn = document.getElementById("attack2");
-const playerAttack3Btn = document.getElementById("attack3");
-const playerBlockBtn = document.getElementById("block");
-const defensiveStanceBtn = document.getElementById("def_stance");
+import Assistant from "./Assistant.js";
+import Character from "./Character.js";
+import Hud from "./Hud.js";
 
 /**
  * ==============
@@ -38,86 +17,29 @@ class Morokh extends Phaser.Scene {
     this.playerIsRunning = false;
     this.playerIsDefensive = false;
     this.playerIsBusy = false; // Blocking, Attacking, Dead
+    this.animationObjects;
+    this.animationNames;
+    this.playerScale = 3.5;
+    this.playerId = "player";
   }
 
   createAnimations() {
-    const idleFrames = this.assistant.getFrameObject(playerAnimations.idle);
-    const runFrames = this.assistant.getFrameObject(playerAnimations.run);
-    const blockIdleFrames = this.assistant.getFrameObject(
-      playerAnimations.block_idle
-    );
-    const blockFrames = this.assistant.getFrameObject(playerAnimations.block);
-    const attack1Frames = this.assistant.getFrameObject(
-      playerAnimations.attack1
-    );
-    const attack2Frames = this.assistant.getFrameObject(
-      playerAnimations.attack2
-    );
-    const attack3Frames = this.assistant.getFrameObject(
-      playerAnimations.attack3
-    );
-    this.anims.create({
-      key: PLAYER_IDLE,
-      frames: idleFrames,
-      frameRate: 8,
-      repeat: -1,
-    });
-    this.anims.create({
-      key: PLAYER_RUN,
-      frames: runFrames,
-      frameRate: 13,
-      repeat: -1,
-    });
-    this.anims.create({
-      key: PLAYER_ATK_1,
-      frames: attack1Frames,
-      frameRate: 10,
-    });
-    this.anims.create({
-      key: PLAYER_ATK_2,
-      frames: attack2Frames,
-      frameRate: 10,
-    });
-    this.anims.create({
-      key: PLAYER_ATK_3,
-      frames: attack3Frames,
-      frameRate: 12,
-    });
-    this.anims.create({
-      key: PLAYER_BLOCK,
-      frames: blockFrames,
-      frameRate: 10,
-    });
-    this.anims.create({
-      key: PLAYER_BLOCK_IDLE,
-      frames: blockIdleFrames,
-      frameRate: 10,
-    });
+    this.animationObjects = this.assistant.createAnimations(this.anims);
+    this.animationNames = this.assistant.getAnimationNames;
   }
 
   initEventListeners() {
-    playerAttack1Btn.addEventListener("click", () => {
-      this.playerIsBusy = true;
-      this.player.play(PLAYER_ATK_1, true);
-    });
+    this.animationNames.forEach((anim) => {
+      if (anim.ui) {
+        document.getElementById(anim.ui).addEventListener("click", () => {
+          if (!this.playerIsBusy) {
+            this.playerIsBusy = anim.busy;
+            this.player.play(anim.key, true);
+          }
 
-    playerAttack2Btn.addEventListener("click", () => {
-      this.playerIsBusy = true;
-      this.player.play(PLAYER_ATK_2, true);
-    });
-
-    playerAttack3Btn.addEventListener("click", () => {
-      this.playerIsBusy = true;
-      this.player.play(PLAYER_ATK_3, true);
-    });
-
-    playerBlockBtn.addEventListener("click", () => {
-      this.playerIsBusy = true;
-      this.player.play(PLAYER_BLOCK, true);
-    });
-
-    defensiveStanceBtn.addEventListener("click", () => {
-      this.playerIsDefensive = !this.playerIsDefensive;
+          if (anim.defensive) this.playerIsDefensive = !this.playerIsDefensive;
+        });
+      }
     });
   }
 
@@ -125,25 +47,26 @@ class Morokh extends Phaser.Scene {
     this.load.image("bg", `${this.bgAssetPath}battleback1-1k.png`);
 
     for (const animation in playerAnimations) {
-      for (const value in playerAnimations[animation]) {
+      for (const value in playerAnimations[animation].sprites) {
         this.load.image(
           value,
-          `${this.playerAssetPath}${playerAnimations[animation][value]}`
+          `${this.playerAssetPath}${playerAnimations[animation].sprites[value]}`
         );
       }
     }
   }
 
   create() {
+    // Initialize Hud elements
+    new Hud().createAndAppendHudElements(document.getElementById("hud"));
+
     // Create Animation configs
     this.createAnimations();
     this.add.image(0, 0, "bg").setOrigin(0, 0);
 
-    console.log(RPGUI); // It exists
-
     // Add player sprite
-    this.player = this.add.sprite(180, 200, PLAYER);
-    this.player.setScale(PLAYER_SCALE);
+    this.player = this.add.sprite(180, 200, this.playerId);
+    this.player.setScale(this.playerScale);
 
     this.player.on(
       "animationcomplete",
@@ -156,22 +79,29 @@ class Morokh extends Phaser.Scene {
 
     this.initEventListeners();
 
+    // Initiate the keys we will use
     this.keys = this.input.keyboard.addKeys("RIGHT,LEFT,Z", true);
   }
 
   update() {
-    if (this.keys.RIGHT.isDown) {
-      this.playerIsRunning = true;
-      this.player.play(PLAYER_RUN, true);
-    }
     if (this.keys.RIGHT.isUp) this.playerIsRunning = false;
     if (!this.playerIsRunning && !this.playerIsBusy) {
       if (!this.playerIsDefensive) {
-        this.player.play(PLAYER_IDLE, true);
+        this.player.play("player_idle", true);
       } else {
-        this.player.play(PLAYER_BLOCK_IDLE, true);
+        this.player.play("player_block_idle", true);
       }
     }
+
+    this.animationNames.forEach((anim) => {
+      if (this.playerIsBusy && anim.ui) {
+        document.getElementById(anim.ui).disabled = true;
+        document.getElementById(anim.ui).style.pointerEvents = "none";
+      } else if (!this.playerIsBusy && anim.ui) {
+        document.getElementById(anim.ui).disabled = false;
+        document.getElementById(anim.ui).style.pointerEvents = "auto";
+      }
+    });
   }
 }
 

@@ -29,6 +29,9 @@ body {
 .j_start {
   justify-content: flex-start !important;
 }
+.j_end {
+  justify-content: flex-end !important;
+}
 .f_row.sm {
   height: 80px;
 }
@@ -142,6 +145,23 @@ button:first-child {
  */
 .p_0 {
   padding: 0 !important;
+}
+.m_0 {
+  margin: 0 !important;
+}
+.mx_auto {
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+.my_auto {
+  margin-top: auto !important;
+  margin-bottom: auto !important;
+}
+.ml_auto {
+  margin-left: auto !important;
+}
+.mr_auto {
+  margin-right: auto !important;
 }
 
 .display_area,
