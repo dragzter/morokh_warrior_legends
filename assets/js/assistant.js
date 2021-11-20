@@ -13,4 +13,5 @@ export default class Assistant {
     }
     return temp;
   }
+  createAnimations() {}
 }
