@@ -1,7 +1,8 @@
-import { playerAnimations } from "./frames.js";
+import { playerAnimations } from "./playerFrames.js";
+import { warriorNpc } from "./npcFrames.js";
 import Assistant from "./Assistant.js";
 import Character from "./Character.js";
-import Hud from "./Hud.js";
+import PlayerUi from "./PlayerUi.js";
 
 /**
  * ==============
@@ -11,25 +12,31 @@ import Hud from "./Hud.js";
 class Morokh extends Phaser.Scene {
   constructor() {
     super();
-    this.playerAssetPath = "assets/img/characters/player/";
+    this.characterAssetPath = "assets/img/characters/";
     this.bgAssetPath = "assets/img/bg/";
     this.assistant = new Assistant();
     this.playerIsRunning = false;
     this.playerIsDefensive = false;
     this.playerIsBusy = false; // Blocking, Attacking, Dead
-    this.animationObjects;
+    this.animationObjects = [playerAnimations];
+    this.composedAnimations = [];
     this.animationNames;
     this.playerScale = 3.5;
     this.playerId = "player";
   }
 
   createAnimations() {
-    this.animationObjects = this.assistant.createAnimations(this.anims);
-    this.animationNames = this.assistant.getAnimationNames;
+    this.animationObjects.forEach((animationConfig) => {
+      this.composedAnimations.push(
+        this.assistant.createAnimations(this.anims, animationConfig)
+      );
+    });
+
+    this.animationMeta = this.assistant.getAnimationNames;
   }
 
   initEventListeners() {
-    this.animationNames.forEach((anim) => {
+    this.animationMeta.forEach((anim) => {
       if (anim.ui) {
         document.getElementById(anim.ui).addEventListener("click", () => {
           if (!this.playerIsBusy) {
@@ -50,23 +57,41 @@ class Morokh extends Phaser.Scene {
       for (const value in playerAnimations[animation].sprites) {
         this.load.image(
           value,
-          `${this.playerAssetPath}${playerAnimations[animation].sprites[value]}`
+          `${this.characterAssetPath}${playerAnimations[animation].sprites[value]}`
         );
       }
     }
+
+    this.load.spritesheet(
+      "warrior_npc_idle",
+      `${this.characterAssetPath}warrior1/Idle.png`,
+      {
+        frameWidth: 184,
+        frameHeight: 137,
+      }
+    );
   }
 
   create() {
     // Initialize Hud elements
-    new Hud().createAndAppendHudElements(document.getElementById("hud"));
+    new PlayerUi().build(document.getElementById("hud"));
 
     // Create Animation configs
     this.createAnimations();
     this.add.image(0, 0, "bg").setOrigin(0, 0);
 
+    this.anims.create({
+      key: "e_idle",
+      frames: this.anims.generateFrameNumbers("warrior_npc_idle"),
+      frameRate: 8,
+      repeat: -1,
+    });
+
     // Add player sprite
-    this.player = this.add.sprite(180, 200, this.playerId);
+    this.player = this.add.sprite(280, 200, this.playerId);
     this.player.setScale(this.playerScale);
+
+    this.npcWarrior = this.add.sprite(700, 182, "npcWarrior");
 
     this.player.on(
       "animationcomplete",
@@ -78,12 +103,16 @@ class Morokh extends Phaser.Scene {
     );
 
     this.initEventListeners();
+    this.npcWarrior.flipX = true;
+    this.npcWarrior.setScale(1.9);
+    this.npcWarrior.play("e_idle", true);
 
     // Initiate the keys we will use
     this.keys = this.input.keyboard.addKeys("RIGHT,LEFT,Z", true);
   }
 
   update() {
+    // PLayer Specific
     if (this.keys.RIGHT.isUp) this.playerIsRunning = false;
     if (!this.playerIsRunning && !this.playerIsBusy) {
       if (!this.playerIsDefensive) {
@@ -93,7 +122,7 @@ class Morokh extends Phaser.Scene {
       }
     }
 
-    this.animationNames.forEach((anim) => {
+    this.animationMeta.forEach((anim) => {
       if (this.playerIsBusy && anim.ui) {
         document.getElementById(anim.ui).disabled = true;
         document.getElementById(anim.ui).style.pointerEvents = "none";

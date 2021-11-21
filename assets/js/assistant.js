@@ -1,4 +1,4 @@
-import { playerAnimations } from "./frames.js";
+import { playerAnimations } from "./playerFrames.js";
 
 export default class Assistant {
   constructor() {
@@ -19,9 +19,9 @@ export default class Assistant {
     }
     return temp;
   }
-  createAnimations(animator) {
-    for (const animation in playerAnimations) {
-      const { settings, sprites } = playerAnimations[animation];
+  createAnimations(animator, animationCollection) {
+    for (const animation in animationCollection) {
+      const { settings, sprites } = animationCollection[animation];
       const animationConfig = {
         key: settings.key,
         frames: this.getFrameObject(sprites),
