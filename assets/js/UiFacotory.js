@@ -16,10 +16,8 @@ export default class UiFactory {
 
   insertElement(parentElement, child) {
     parentElement.appendChild(child);
-    console.log(child);
     // If there are RPGUI elements to create
     if (child.dataset.create) {
-      console.log(child, "create with rpgui");
       RPGUI.create(child, child.dataset.create);
     }
     return parentElement;
