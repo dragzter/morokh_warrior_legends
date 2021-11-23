@@ -42,7 +42,14 @@ export default class PlayerUi {
     this.elementCollection = [];
   }
 
-  build(rootElement) {
+  build(element) {
+    switch (element) {
+      case "hud":
+        this._buildHud();
+        break;
+    }
+  }
+  _buildHud() {
     this.hudElements.forEach((hudEl) => {
       const el = this.factory.assemble(hudEl);
       if (hudEl.children) {
@@ -51,7 +58,7 @@ export default class PlayerUi {
           this.factory.insertElement(el, _nestedChild);
         });
       }
-      this.factory.insertElement(rootElement, el);
+      this.factory.insertElement(document.getElementById("hud"), el);
     });
   }
 }

@@ -23,11 +23,6 @@ class Main extends Phaser.Scene {
     this.playerId = "player";
   }
 
-  generateAnimations() {
-    this.assistant.createAnimations();
-    this.animationMeta = this.assistant.getAnimationNames;
-  }
-
   initEventListeners() {
     this.animationMeta.forEach((anim) => {
       if (anim.ui) {
@@ -44,7 +39,7 @@ class Main extends Phaser.Scene {
   }
 
   preload() {
-    this.assistant = new Assistant(this.load, this.anims, this.add);
+    this.assistant = new Assistant(this);
     this.assistant.loadImage("bg", `${this.bgAssetPath}battleback1-1k.png`);
     this.assistant.loadImageCollection([playerAnimationsConfig, warriorNpc]);
     const PLAYER_1 = new Player();
@@ -52,11 +47,42 @@ class Main extends Phaser.Scene {
 
   create() {
     // Initialize Hud elements
-    new PlayerUi().build(document.getElementById("hud"));
+    new PlayerUi().build("hud");
 
     // Create Animation configs
-    this.generateAnimations();
+    this.assistant.createAnimations();
+    this.animationMeta = this.assistant.getAnimationNames;
     this.add.image(0, 0, "bg").setOrigin(0, 0);
+
+    /**
+     * 1. Start fight
+     *   a. Skills are available to use
+     *   b. Provision oponent
+     *     i. Opponent stats (hp, dmg, name, meta info)
+     *     ii. Opponent animations
+     *     iii. Opponent skills (attack/defend)
+     *     iv. Provision sprite
+     *     v. Place sprite on canvas
+     *   c.
+     *   d. Action points are full (action points determine what can be done)
+     *   e. Can fight or flee - go to previous state (place)
+     * 2. Player has a turn
+     *   a. Player makes a move
+     *   b. If Attack
+     *     i. Determine if hit - get opponent avoidance chance, and player miss chance
+     *     ii. If hit, check if crit
+     *     iii.  Subtract hp from opponent
+     *     iv. Calculate game status (hp, check if fight is over)
+     *   c. If Ability/Buff/Effect
+     *     i. Apply effect to player
+     *     ii. Calculate game status
+     *   d. End turn
+     * 3. Opponents turn
+     *   a. Asses status (hp)
+     *   b. Decide what ability to use based on status
+     *
+     *
+     */
 
     // Add sprites
     this.player = this.add.sprite(280, 200);

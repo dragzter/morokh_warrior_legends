@@ -1,14 +1,14 @@
 export default class Assistant {
-  constructor(loader, animator, add) {
+  constructor(PHSR) {
     this.frameObjects = [];
     this.animationNames = [];
     this.assets = [];
-    this.loader = loader;
-    this.animator = animator;
+    this.loader = PHSR.load;
+    this.animator = PHSR.anims;
     this.charAssetsPath = "assets/img/characters/";
     this.bgAssetPath = "assets/img/bg/";
     this.animationImages = [];
-    this.add = add;
+    this.add = PHSR.add;
     this.sprite;
   }
   /**
@@ -79,10 +79,7 @@ export default class Assistant {
       for (const image in imgs.config) {
         for (const value in imgs.config[image].sprites) {
           if (imgs.config[image].fromSingles) {
-            this.loader.image(
-              value,
-              `${this.charAssetsPath}${imgs.config[image].sprites[value]}`
-            );
+            this.loader.image(value, `${this.charAssetsPath}${imgs.config[image].sprites[value]}`);
           } else {
             this.loader.spritesheet(
               imgs.config[image].settings.key,
