@@ -1,8 +1,9 @@
 import { playerAnimationsConfig } from "./playerFrames.js";
 import { npcFrames, warriorNpc } from "./npcFrames.js";
 import Assistant from "./Assistant.js";
-import { Character, Player } from "./Character.js";
+import { Character, Enemy, Player } from "./Character.js";
 import PlayerUi from "./PlayerUi.js";
+import { starterWeapon } from "./PresetItems.js";
 
 /**
  * ==============
@@ -24,6 +25,7 @@ class Main extends Phaser.Scene {
   }
 
   initEventListeners() {
+    // TODO Break these out of here and do not run them in a loop
     this.animationMeta.forEach((anim) => {
       if (anim.ui) {
         document.getElementById(anim.ui).addEventListener("click", () => {
@@ -36,18 +38,30 @@ class Main extends Phaser.Scene {
         });
       }
     });
+    // TODO
+    // Should create a class that can dynamically create an event
+    // listener that can accept a callback to execute on the event
+    // i.e. new GameEvent()._makeEvent("click", <dom-element>, callback)
   }
 
   preload() {
     this.assistant = new Assistant(this);
     this.assistant.loadImage("bg", `${this.bgAssetPath}battleback1-1k.png`);
     this.assistant.loadImageCollection([playerAnimationsConfig, warriorNpc]);
-    const PLAYER_1 = new Player();
+    this.PLAYER_1 = new Player();
+    this.PLAYER_1.name = "Emerthon";
   }
 
   create() {
     // Initialize Hud elements
     new PlayerUi().build("hud");
+
+    // TODO equip starter gear for player
+    this.PLAYER_1.equipItem(starterWeapon);
+    this.PLAYER_1.addToInventory(starterWeapon);
+    this.PLAYER_1.addToInventory(starterWeapon);
+    this.PLAYER_1.addToInventory(starterWeapon);
+    console.log(this.PLAYER_1);
 
     // Create Animation configs
     this.assistant.createAnimations();
