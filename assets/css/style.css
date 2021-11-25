@@ -8,6 +8,7 @@ body {
   width: 100%;
   height: auto;
   padding: 30px 0;
+  min-width: 1000px;
 }
 .container {
   width: 100%;
@@ -89,6 +90,13 @@ body {
 }
 .f_dir_column {
   flex-direction: column;
+}
+
+/**
+ * Colors
+ */
+.leather_brown_bg {
+  background-color: #854c30 !important;
 }
 
 /**

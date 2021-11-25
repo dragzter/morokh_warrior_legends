@@ -1,6 +1,6 @@
 <html>
   <head>
-    <title>quest_hub</title>
+    <title>Morokh</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="assets/css/rpgui.min.css" />
     <link rel="stylesheet" href="assets/css/normalize.css" />
@@ -22,37 +22,23 @@
           <div id="phaser-example" class="display_area f_col c10 p_0"></div>
         </div>
         <div class="f_row sm rpgui-container framed p_0">
-          <div class="abilities f_col c10 j_start p_0">
-            <button id="attack1" class="rpgui-button"><p>Slash</p></button>
-            <button id="attack2" class="rpgui-button"><p>Cleave</p></button>
-            <button id="attack3" class="rpgui-button"><p>Smite</p></button>
-            <button id="block" class="rpgui-button"><p>Block</p></button>
-            <button id="def_stance" class="rpgui-button grey">
-              Defensive Stance
-            </button>
-          </div>
+          <div id="actionBar" class="abilities f_col c10 j_start p_0"></div>
         </div>
         <div class="f_row rpgui-container framed-golden">
-          <div class="inventory f_col c4 f_dir_column">
-            <div class="f_row h100 j_center">
+          <div id="playerInventory" class="inventory f_col c5 f_dir_column">
+            <div class="f_row h100 leather_brown_bg">
               <div class="f_col c2 rpgui-icon helmet-slot">Helm</div>
               <div class="f_col c2 rpgui-icon armor-slot">Body</div>
+              <div class="f_col c2 rpgui-icon magic-slot">Talisman</div>
             </div>
-            <div class="f_row h100 j_center">
-              <div class="f_col c2 rpgui-icon weapon-slot">
-                <div class="rpgui-icon sword"></div>
-              </div>
-              <div class="f_col c2 rpgui-icon shield-slot">
-                <p>Offhand</p>
-              </div>
-              <div class="f_col c2 rpgui-icon magic-slot">Heirloom</div>
-            </div>
-            <div class="f_row h100 j_center">
+            <div class="f_row h100 leather_brown_bg">
+              <div class="f_col c2 rpgui-icon weapon-slot">Mainhand</div>
+              <div class="f_col c2 rpgui-icon shield-slot">Shield</div>
               <div class="f_col c2 rpgui-icon shoes-slot">Boots</div>
               <div class="f_col c2 rpgui-icon empty-slot">Belt</div>
             </div>
           </div>
-          <div class="log f_col c6">
+          <div id="gameLog" class="log f_col c6">
             <h1>LOG</h1>
           </div>
         </div>

@@ -15,6 +15,14 @@ export default class PlayerUi {
       {
         type: "h2",
         attributes: {
+          id: "action_points",
+          class: "my_auto f_col c2 ml_auto",
+        },
+        content: "AP 2/2",
+      },
+      {
+        type: "h2",
+        attributes: {
           id: "player_level",
           class: "my_auto f_col c2 ml_auto",
         },
@@ -52,12 +60,6 @@ export default class PlayerUi {
   _buildHud() {
     this.hudElements.forEach((hudEl) => {
       const el = this.factory.assemble(hudEl);
-      if (hudEl.children) {
-        hudEl.children.forEach((child) => {
-          const _nestedChild = this.factory.assemble(child);
-          this.factory.insertElement(el, _nestedChild);
-        });
-      }
       this.factory.insertElement(document.getElementById("hud"), el);
     });
   }

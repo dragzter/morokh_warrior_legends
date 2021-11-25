@@ -1,4 +1,8 @@
 export default class Assistant {
+  /**
+   * Delegate of Phaser.Scene
+   * @param {class} PHSR
+   */
   constructor(PHSR) {
     this.frameObjects = [];
     this.animationNames = [];
@@ -52,18 +56,7 @@ export default class Assistant {
           ...settings,
         };
 
-        this.animationNames.push({
-          key: settings.key,
-          busy: settings.busy ? settings.busy : false,
-          defensive: settings.defensive ? settings.defensive : false,
-          ui: settings.domActivatorID ? settings.domActivatorID : "",
-        });
-
         this.animator.create(animationConfig);
-
-        // if (anim.meta.sprite_config) {
-        //   this.sprite = this.add.sprite(anim.meta.sprite_config, anim.meta.sprite_id);
-        // }
       }
     });
   }

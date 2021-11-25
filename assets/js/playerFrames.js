@@ -5,6 +5,47 @@ export const playerAnimationsConfig = {
       x: 280,
       y: 200,
     },
+    handlers: {
+      click: {
+        defensive_stance: {
+          ui_css_id: "def_stance",
+          animation: "player_block_idle",
+          element: {},
+        },
+        block: {
+          ui_css_id: "block",
+          animation: "player_block",
+        },
+        attack1: {
+          ui_css_id: "attack1",
+          animation: "player_attack_1",
+          element: {
+            type: "button",
+            attributes: {
+              id: "attack1",
+              class: "rpgui-button",
+            },
+            content: "Strike",
+            // children: [
+            //   {
+            //     type: "div",
+            //     attributes: {
+            //       class: "rpgui-icon sword",
+            //     },
+            //   },
+            // ],
+          },
+        },
+        attack2: {
+          ui_css_id: "attack2",
+          animation: "player_attack_2",
+        },
+        attack3: {
+          ui_css_id: "attack3",
+          animation: "player_attack_3",
+        },
+      },
+    },
   },
   config: {
     idle: {
@@ -30,8 +71,6 @@ export const playerAnimationsConfig = {
       settings: {
         key: "player_block_idle",
         frameRate: 10,
-        defensive: true,
-        domActivatorID: "def_stance",
       },
       sprites: {
         plr_block_idle_0: "player/BlockIdle/HeroKnight_Block_Idle_0.png",
@@ -49,8 +88,6 @@ export const playerAnimationsConfig = {
       settings: {
         key: "player_block",
         frameRate: 10,
-        busy: true,
-        domActivatorID: "block",
       },
       sprites: {
         plr_block_0: "player/Block/HeroKnight_Block_0.png",
@@ -85,8 +122,6 @@ export const playerAnimationsConfig = {
       settings: {
         key: "player_attack_1",
         frameRate: 10,
-        busy: true,
-        domActivatorID: "attack1",
       },
       sprites: {
         plr_att1_0: "player/Attack1/HeroKnight_Attack1_0.png",
@@ -102,8 +137,6 @@ export const playerAnimationsConfig = {
       settings: {
         key: "player_attack_2",
         frameRate: 10,
-        busy: true,
-        domActivatorID: "attack2",
       },
       sprites: {
         plr_att2_0: "player/Attack2/HeroKnight_Attack2_0.png",
@@ -119,8 +152,6 @@ export const playerAnimationsConfig = {
       settings: {
         key: "player_attack_3",
         frameRate: 12,
-        busy: true,
-        domActivatorID: "attack3",
       },
       sprites: {
         plr_att3_0: "player/Attack3/HeroKnight_Attack3_0.png",

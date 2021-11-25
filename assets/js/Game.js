@@ -2,8 +2,6 @@ import { playerAnimationsConfig } from "./playerFrames.js";
 import { npcFrames, warriorNpc } from "./npcFrames.js";
 import Assistant from "./Assistant.js";
 import { Character, Enemy, Player } from "./Character.js";
-import PlayerUi from "./PlayerUi.js";
-import { starterWeapon } from "./PresetItems.js";
 
 /**
  * ==============
@@ -14,70 +12,40 @@ import { starterWeapon } from "./PresetItems.js";
 class Main extends Phaser.Scene {
   constructor() {
     super();
+    this.disableButtons = false;
     this.characterAssetPath = "assets/img/characters/";
     this.bgAssetPath = "assets/img/bg/";
-    this.playerIsRunning = false;
-    this.playerIsDefensive = false;
-    this.playerIsBusy = false; // Blocking, Attacking, Dead
-    this.animationNames;
-    this.playerScale = 3.5;
-    this.playerId = "player";
-  }
-
-  initEventListeners() {
-    // TODO Break these out of here and do not run them in a loop
-    this.animationMeta.forEach((anim) => {
-      if (anim.ui) {
-        document.getElementById(anim.ui).addEventListener("click", () => {
-          if (!this.playerIsBusy) {
-            this.playerIsBusy = anim.busy;
-            this.player.play(anim.key, true);
-          }
-
-          if (anim.defensive) this.playerIsDefensive = !this.playerIsDefensive;
-        });
-      }
-    });
-    // TODO
-    // Should create a class that can dynamically create an event
-    // listener that can accept a callback to execute on the event
-    // i.e. new GameEvent()._makeEvent("click", <dom-element>, callback)
   }
 
   preload() {
     this.assistant = new Assistant(this);
     this.assistant.loadImage("bg", `${this.bgAssetPath}battleback1-1k.png`);
     this.assistant.loadImageCollection([playerAnimationsConfig, warriorNpc]);
-    this.PLAYER_1 = new Player();
-    this.PLAYER_1.name = "Emerthon";
   }
 
   create() {
-    // Initialize Hud elements
-    new PlayerUi().build("hud");
+    this.keys = this.input.keyboard.addKeys("RIGHT,LEFT,Z", true);
+    this.add.image(0, 0, "bg").setOrigin(0, 0);
+    this.assistant.createAnimations();
 
-    // TODO equip starter gear for player
-    this.PLAYER_1.equipItem(starterWeapon);
-    this.PLAYER_1.addToInventory(starterWeapon);
-    this.PLAYER_1.addToInventory(starterWeapon);
-    this.PLAYER_1.addToInventory(starterWeapon);
-    console.log(this.PLAYER_1);
+    this.PLAYER_1 = new Player(this);
+    this.PLAYER_1.name = "Emerthon";
 
     // Create Animation configs
-    this.assistant.createAnimations();
-    this.animationMeta = this.assistant.getAnimationNames;
-    this.add.image(0, 0, "bg").setOrigin(0, 0);
-
+    const b = new Enemy();
+    console.log(b);
+    const c = new Character();
+    console.log(c);
     /**
      * 1. Start fight
      *   a. Skills are available to use
-     *   b. Provision oponent
+     *   b. Provision opponent
      *     i. Opponent stats (hp, dmg, name, meta info)
      *     ii. Opponent animations
      *     iii. Opponent skills (attack/defend)
      *     iv. Provision sprite
      *     v. Place sprite on canvas
-     *   c.
+     *   c. ???
      *   d. Action points are full (action points determine what can be done)
      *   e. Can fight or flee - go to previous state (place)
      * 2. Player has a turn
@@ -99,51 +67,22 @@ class Main extends Phaser.Scene {
      */
 
     // Add sprites
-    this.player = this.add.sprite(280, 200);
-    this.npcWarrior = this.add.sprite(700, 182);
-
-    this.player.setScale(this.playerScale);
-
-    this.player.on(
-      "animationcomplete",
-      () => {
-        this.playerIsBusy = false;
-        this.playerIsRunning = false;
-      },
-      this
-    );
+    this.PLAYER_1.initPlayer();
 
     // Add event listeners
-    this.initEventListeners();
+    this.PLAYER_1.initHandlers();
+
+    // TODO - dynamically generate opponent
+    this.npcWarrior = this.add.sprite(700, 182);
     this.npcWarrior.flipX = true;
     this.npcWarrior.setScale(1.9);
     this.npcWarrior.play("war_npc_idle", true);
 
     // Initiate the keyboard keys we will use
-    this.keys = this.input.keyboard.addKeys("RIGHT,LEFT,Z", true);
   }
 
   update() {
-    // PLayer Specific
-    if (this.keys.RIGHT.isUp) this.playerIsRunning = false;
-    if (!this.playerIsRunning && !this.playerIsBusy) {
-      if (!this.playerIsDefensive) {
-        this.player.play("player_idle", true);
-      } else {
-        this.player.play("player_block_idle", true);
-      }
-    }
-
-    // Animation meta contains additional properties for UI actions
-    this.animationMeta.forEach((anim) => {
-      if (this.playerIsBusy && anim.ui) {
-        document.getElementById(anim.ui).disabled = true;
-        document.getElementById(anim.ui).style.pointerEvents = "none";
-      } else if (!this.playerIsBusy && anim.ui) {
-        document.getElementById(anim.ui).disabled = false;
-        document.getElementById(anim.ui).style.pointerEvents = "auto";
-      }
-    });
+    this.PLAYER_1.updatePlayer();
   }
 }
 

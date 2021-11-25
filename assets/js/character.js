@@ -1,3 +1,8 @@
+import AbilityUi from "./AbilityFactory.js";
+import { ACTION_BAR } from "./commonDomElements.js";
+import { playerAnimationsConfig } from "./playerFrames.js";
+import PlayerUi from "./PlayerUi.js";
+
 export class Character {
   constructor() {
     this.name = "";
@@ -22,39 +27,34 @@ export class Character {
   }
 }
 
-/**
- * Enemy Types
- * --------------
- * 1. Minion - Weakest
- * 2. Soldier - Normal Difficulty
- * 3. Elite - Hard Difficulty
- * 4. Miniboss - Very Hard Difficulty
- * 5. Boss - Hardest Difficulty
- *
- * Player Class
- */
-
 export class Player extends Character {
-  constructor() {
+  constructor(PHSR) {
     super();
     this.gold = 0;
+    this.PHSR = PHSR;
     this.inventoryCounter = 0;
     this.archeType = "warrior";
-    this.equipped = [];
+    this.equipped = {
+      helm: [],
+      chest: [],
+      mainhand: [],
+      offhand: [],
+      belt: [],
+      boots: [],
+      heirloom: [],
+    };
     this.inventory = new Map(); // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map
     this.completedQuests = new Map();
     this.maxInventorySize = 30;
-    this.helm = [];
-    this.chest = [];
-    this.mainhand = [];
-    this.offhand = [];
-    this.belt = [];
-    this.boots = [];
-    this.heirloom = [];
+    this.playerIsRunning = false;
+    this.playerIsDefensive = false;
+    this.playerIsBusy = false; // Blocking, Attacking, Dead
+    this.animationNames;
+    this.playerScale = 3.5;
+    this.playerId = "player";
   }
 
   addToInventory(item) {
-    // TODO enforce max inventory size
     if (this.inventory.size < this.maxInventorySize) {
       console.log(`${item.name} has been placed in your Inventory.`);
       this.inventory.set(`${this.inventoryCounter}. ${item.name}`, item);
@@ -66,27 +66,97 @@ export class Player extends Character {
   }
 
   equipItem(item) {
-    if (!this[item.slot].length) {
-      this[item.slot].push(item);
+    if (!this.equipped[item.slot].length) {
+      this.equipped[item.slot].push(item);
       console.log(`Equipped ${item.name}`);
       return `Equipped ${item.name}`;
     } else {
       console.log(
-        `Cannot equip ${item.name}. You have ${
-          this[item.slot][0].name
-        } equipped already.`
+        `Cannot equip ${item.name}. You have ${this[item.slot][0].name} equipped already.`
       );
 
-      return `Cannot equip ${item.name}. You have ${
-        this[item.slot][0].name
-      } equipped already.`;
+      return `Cannot equip ${item.name}. You have ${this[item.slot][0].name} equipped already.`;
     }
   }
+
+  initHandlers() {
+    const { config } = playerAnimationsConfig;
+    const { attack1 } = playerAnimationsConfig.meta.handlers.click;
+
+    this.createPlayerAbility(attack1, ACTION_BAR, () => {
+      if (!this.playerIsBusy) {
+        this.playerIsBusy = true;
+        this.playerSprite.play(config.attack1.settings.key, true);
+      }
+    });
+
+    this.playerSprite.on(
+      "animationcomplete",
+      () => {
+        this.playerIsBusy = false;
+        this.playerIsRunning = false;
+      },
+      this
+    );
+  }
+
+  initPlayer() {
+    new PlayerUi().build("hud");
+
+    this.playerSprite = this.PHSR.add.sprite(280, 200).setScale(this.playerScale);
+  }
+
+  updatePlayer() {
+    if (!this.playerIsRunning && !this.playerIsBusy) {
+      if (!this.playerIsDefensive) {
+        this.playerSprite.play("player_idle", true);
+      } else {
+        this.playerSprite.play("player_block_idle", true);
+      }
+    }
+
+    if (this.playerIsBusy) this.disableButtons = true;
+    else this.disableButtons = false;
+
+    ACTION_BAR.querySelectorAll("button").forEach((button) => {
+      button.disabled = this.disableButtons;
+    });
+  }
+
+  /**
+   * Creates a click handler and passes the action to perform for the event
+   * @param {string} domElementId
+   * @param {function} action
+   * @param {string} eventType
+   */
+  createPlayerAbility(abilityConfig, rootElement, action) {
+    new AbilityUi().createClickAbility(abilityConfig, rootElement, action);
+  }
+
+  endTurn() {}
 }
 
+/**
+ * Enemy Types
+ * --------------
+ * 1. Minion - Weakest
+ * 2. Soldier - Normal Difficulty
+ * 3. Elite - Hard Difficulty
+ * 4. Miniboss - Very Hard Difficulty
+ * 5. Boss - Hardest Difficulty
+ *
+ */
 export class Enemy extends Character {
   constructor() {
     super();
     this.archeType = "NPC";
   }
+
+  generateNewEnemy() {}
+  updateEnemy() {}
+  decideMove() {}
+  die() {}
+  attack() {}
+  defend() {}
+  endTurn() {}
 }
