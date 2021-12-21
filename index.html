@@ -24,10 +24,17 @@
         <div class="f_row sm rpgui-container framed p_0">
           <div id="actionBar" class="abilities f_col c10 j_start p_0"></div>
         </div>
-        <div class="f_row rpgui-container framed-golden">
-          <div id="playerInventory" class="inventory f_col c5 f_dir_column">
+        <div class="f_row sm rpgui-container framed p_0">
+          <div id="gameMenu" class="f_col c10 j_start p_0">
+            <button class="rpgui-button">Inventory</button>
+            <button class="rpgui-button">Quests</button>
+            <button class="rpgui-button">World Map</button>
+          </div>
+        </div>
+        <div class="f_row rpgui-container framed-golden sm100">
+          <!-- <div id="playerInventory" class="inventory f_col c5 f_dir_column">
             <div class="f_row h100 leather_brown_bg">
-              <div class="f_col c2 rpgui-icon helmet-slot">Helm</div>
+             <div class="f_col c2 rpgui-icon helmet-slot">Helm</div>
               <div class="f_col c2 rpgui-icon armor-slot">Body</div>
               <div class="f_col c2 rpgui-icon magic-slot">Talisman</div>
             </div>
@@ -37,22 +44,22 @@
               <div class="f_col c2 rpgui-icon shoes-slot">Boots</div>
               <div class="f_col c2 rpgui-icon empty-slot">Belt</div>
             </div>
-          </div>
-          <div id="gameLog" class="log f_col c6">
-            <h1>LOG</h1>
+          </div> -->
+
+          <div
+            id="gameLog"
+            class="log f_col c10 j_start p_0 f_dir_column overflow_hidden"
+          >
+            <p>Player did 10 damage</p>
+            <p>Enemy blocked Strike</p>
+            <p>Enemy blocked Strike</p>
+            <p>Enemy blocked Strike</p>
           </div>
         </div>
       </div>
     </div>
     <script src="assets/js/phaser.min.js"></script>
     <script src="assets/js/rpgui.js"></script>
-    <!-- <script type="module" src="assets/js/globalFunctions.js"></script>
-    <script type="module" src="assets/js/UiFactory.js"></script>
-    <script type="module" src="assets/js/Equipment.js"></script>
-    <script type="module" src="assets/js/Hud.js"></script>
-    <script type="module" src="assets/js/frames.js"></script>
-    <script type="module" src="assets/js/Character.js"></script>
-    <script type="module" src="assets/js/Assistant.js"></script> -->
     <script type="module" src="assets/js/Game.js"></script>
   </body>
 </html>

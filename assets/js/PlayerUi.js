@@ -29,23 +29,31 @@ export default class PlayerUi {
         content: "Level: 1",
       },
       {
-        type: "button",
+        type: "div",
         attributes: {
-          id: "player_stats",
-          class: "rpgui-button",
+          id: "enemy_hp",
+          class: "rpgui-progress red f_col c3",
+          "data-create": "progress",
         },
-        content: "Hello",
-        children: [
-          {
-            type: "img",
-            attributes: {
-              id: "player_stats_icon",
-              class: "",
-              src: "",
-            },
-          },
-        ],
       },
+      // {
+      //   type: "button",
+      //   attributes: {
+      //     id: "player_stats",
+      //     class: "rpgui-button",
+      //   },
+      //   content: "Hello",
+      //   children: [
+      //     {
+      //       type: "img",
+      //       attributes: {
+      //         id: "player_stats_icon",
+      //         class: "",
+      //         src: "",
+      //       },
+      //     },
+      //   ],
+      // },
     ];
     this.elementCollection = [];
   }

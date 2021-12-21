@@ -32,10 +32,7 @@ class Main extends Phaser.Scene {
     this.PLAYER_1.name = "Emerthon";
 
     // Create Animation configs
-    const b = new Enemy();
-    console.log(b);
-    const c = new Character();
-    console.log(c);
+
     /**
      * 1. Start fight
      *   a. Skills are available to use
@@ -78,6 +75,8 @@ class Main extends Phaser.Scene {
     this.npcWarrior.setScale(1.9);
     this.npcWarrior.play("war_npc_idle", true);
 
+    this.add.text(10, 10, this.PLAYER_1.getName);
+    this.add.text(780, 10, "Bold Warrior");
     // Initiate the keyboard keys we will use
   }
 

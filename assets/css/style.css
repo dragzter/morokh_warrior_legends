@@ -7,7 +7,7 @@ body {
   justify-content: center;
   width: 100%;
   height: auto;
-  padding: 30px 0;
+  padding: 20px 0;
   min-width: 1000px;
 }
 .container {
@@ -35,6 +35,15 @@ body {
 }
 .f_row.sm {
   height: 80px;
+}
+.f_row.sm100 {
+  height: 100px;
+}
+.f_row.sm200 {
+  height: 200px;
+}
+.f_row.sm300 {
+  height: 300px;
 }
 .f_row.md {
   height: 400px;
@@ -90,6 +99,13 @@ body {
 }
 .f_dir_column {
   flex-direction: column;
+}
+
+/**
+ * Misc
+ */
+.overflow_hidden {
+  overflow: hidden !important;
 }
 
 /**
@@ -180,4 +196,9 @@ button:first-child {
 .skills,
 .abilities,
 .notifications {
+}
+
+#gameLog p {
+  margin: 2px 0;
+  width: 100%;
 }
