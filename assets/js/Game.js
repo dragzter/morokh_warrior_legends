@@ -2,7 +2,7 @@ import { playerAnimationsConfig } from "./playerFrames.js";
 import { npcFrames, warriorNpc } from "./npcFrames.js";
 import Assistant from "./Assistant.js";
 import { Character, Enemy, Player } from "./Character.js";
-
+import GameLifeCycle from "./GameLifeCycle.js";
 /**
  * ==============
  * GAME CLASS   |
@@ -29,7 +29,11 @@ class Main extends Phaser.Scene {
     this.assistant.createAnimations();
 
     this.PLAYER_1 = new Player(this);
+    this.EMENY = new Enemy(this);
+    this.GAME_LOOP = new GameLifeCycle(this.PLAYER_1, this.EMENY);
     this.PLAYER_1.name = "Emerthon";
+
+    this.GAME_LOOP.attack();
 
     // Create Animation configs
 

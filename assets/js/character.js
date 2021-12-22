@@ -5,25 +5,37 @@ import PlayerUi from "./PlayerUi.js";
 
 export class Character {
   constructor() {
-    this.name = "";
-    this.title = "";
-    this.hitPoints = 50;
+    this._name = "";
+    this._title = "";
+    this._hitPoints = 50;
     this.skills = [];
     this.hit = 0.9;
     this.crititcal = 0.05;
     this.avoidance = 0.05;
   }
 
-  get getName() {
-    return this.name;
+  set hitPoints(hp) {
+    this._hitPoints = hp;
   }
 
-  get getTitle() {
-    return this.title;
+  set name(name) {
+    this._name = name;
   }
 
-  get getHitPoints() {
-    return this.hitPoints;
+  set title(title) {
+    this._title = title;
+  }
+
+  get name() {
+    return this._name;
+  }
+
+  get title() {
+    return this._title;
+  }
+
+  get hitPoints() {
+    return this._hitPoints;
   }
 }
 
@@ -72,12 +84,23 @@ export class Player extends Character {
       return `Equipped ${item.name}`;
     } else {
       console.log(
-        `Cannot equip ${item.name}. You have ${this[item.slot][0].name} equipped already.`
+        `Cannot equip ${item.name}. You have ${
+          this[item.slot][0].name
+        } equipped already.`
       );
 
-      return `Cannot equip ${item.name}. You have ${this[item.slot][0].name} equipped already.`;
+      return `Cannot equip ${item.name}. You have ${
+        this[item.slot][0].name
+      } equipped already.`;
     }
   }
+
+  /**
+   * Look at special stat bonuses from equipped items and apply to player stats
+   */
+  applyEquippedItemEffects() {}
+
+  useAbility() {}
 
   initHandlers() {
     const { config } = playerAnimationsConfig;
@@ -103,7 +126,9 @@ export class Player extends Character {
   initPlayer() {
     new PlayerUi().build("hud");
 
-    this.playerSprite = this.PHSR.add.sprite(280, 200).setScale(this.playerScale);
+    this.playerSprite = this.PHSR.add
+      .sprite(280, 200)
+      .setScale(this.playerScale);
   }
 
   updatePlayer() {
